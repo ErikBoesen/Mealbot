@@ -22,11 +22,13 @@ def process(message):
             users = [user['name'] for user in users]
             random.shuffle(users)
             pairs = []
+            extra = None
             if len(users) % GROUP_SIZE != 0:
                 extra = users.pop()
             for i in range(0, len(users), GROUP_SIZE):
                 pairs.append(users[i:i + GROUP_SIZE])
-            pairs[-1].append(extra)
+            if extra:
+                pairs[-1].append(extra)
             return '>Meal pairings:\n--------------\n' + '\n'.join(['- ' + ' & '.join(pair) for pair in pairs])
 
 
