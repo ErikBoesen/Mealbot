@@ -16,7 +16,6 @@ def process(message):
     # Prevent self-reply
     if message['sender_type'] != 'bot':
         if message['text'].lower().startswith(PREFIX):
-            #args = message['text'].lstrip(PREFIX).strip().split()
             group_id = message['group_id']
             users = requests.get(f'https://api.groupme.com/v3/groups/{group_id}?token={GROUPME_ACCESS_TOKEN}').json()["response"]["members"]
             users = [user['name'] for user in users]
