@@ -29,7 +29,7 @@ def process(message):
                 pairs.append(users[i:i + GROUP_SIZE])
             if extra:
                 pairs[-1].append(extra)
-            return '>Meal pairings:\n--------------\n' + '\n'.join(['- ' + ' & '.join(pair) for pair in pairs])
+            return 'Meal pairings:\n--------------\n' + '\n'.join(['- ' + ' & '.join(pair) for pair in pairs])
 
 
 # Endpoint
