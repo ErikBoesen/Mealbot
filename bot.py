@@ -40,12 +40,12 @@ def receive():
     instance = bot.instance(group_id)
     response = process(message, instance)
     if response:
-        send(response, instance.bot_id)
+        send(response, instance.id)
 
     return 'ok', 200
 
 
-def send(text, group_id):
+def send(text, bot_id):
     url  = 'https://api.groupme.com/v3/bots/post'
 
     message = {
