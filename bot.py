@@ -9,15 +9,16 @@ app = Flask(__name__)
 bot = mebots.Bot('mealbot', os.environ.get('BOT_TOKEN'))
 
 PREFIX = 'mealbot'
-GROUPME_ACCESS_TOKEN = os.environ['GROUPME_ACCESS_TOKEN']
 GROUP_SIZE = 2
 
-def process(message):
+def process(message, instance):
     # Prevent self-reply
     if message['sender_type'] != 'bot':
         if message['text'].lower().startswith(PREFIX):
             group_id = message['group_id']
-            users = requests.get(f'https://api.groupme.com/v3/groups/{group_id}?token={GROUPME_ACCESS_TOKEN}').json()["response"]["members"]
+            bot_id = instance.id
+            groupme_token = instance.token
+            users = requests.get(f'https://api.groupme.com/v3/groups/{group_id}?token={groupme_token}').json()['response']['members']
             users = [user['name'] for user in users]
             random.shuffle(users)
             pairs = []
@@ -36,9 +37,10 @@ def process(message):
 def receive():
     message = request.get_json()
     group_id = message['group_id']
-    response = process(message)
+    instance = bot.instance(group_id)
+    response = process(message, instance)
     if response:
-        send(response, group_id)
+        send(response, instance.bot_id)
 
     return 'ok', 200
 
@@ -47,7 +49,7 @@ def send(text, group_id):
     url  = 'https://api.groupme.com/v3/bots/post'
 
     message = {
-        'bot_id': bot.instance(group_id).id,
+        'bot_id': bot_id,
         'text': text,
     }
     r = requests.post(url, json=message)
