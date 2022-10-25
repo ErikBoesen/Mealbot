@@ -4,10 +4,8 @@ sys.path.insert(0, 'vendor')
 import json
 import os
 import requests
-import mebots
 import random
 
-bot = mebots.Bot('mealbot', os.environ.get('BOT_TOKEN'))
 PREFIX = 'mealbot'
 GROUP_SIZE = 2
 
@@ -32,8 +30,6 @@ def process(message, group_id, user_token):
     if message['sender_type'] != 'bot':
         if message['text'].lower().startswith(PREFIX):
             group_id = message['group_id']
-            bot_id = instance.id
-            groupme_token = instance.token
             users = requests.get(f'https://api.groupme.com/v3/groups/{group_id}?token={user_token}').json()['response']['members']
             users = [user['name'] for user in users]
             random.shuffle(users)
