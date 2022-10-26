@@ -14,8 +14,8 @@ def receive(event, context):
     message = json.loads(event['body'])
     group_id = message['group_id']
     bot_id = message['bot_id']
-    user_token = message['user_token']
-    response = process(message, group_id, user_token)
+    token = message['token']
+    response = process(message, group_id, token)
     if response:
         send(response, bot_id)
 
@@ -25,12 +25,12 @@ def receive(event, context):
     }
 
 
-def process(message, group_id, user_token):
+def process(message, group_id, token):
     # Prevent self-reply
     if message['sender_type'] != 'bot':
         if message['text'].lower().startswith(PREFIX):
             group_id = message['group_id']
-            users = requests.get(f'https://api.groupme.com/v3/groups/{group_id}?token={user_token}').json()['response']['members']
+            users = requests.get(f'https://api.groupme.com/v3/groups/{group_id}?token={token}').json()['response']['members']
             users = [user['name'] for user in users]
             random.shuffle(users)
             pairs = []
